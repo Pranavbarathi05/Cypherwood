@@ -4,6 +4,12 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
+import ScoreboardPage from "./pages/ScoreboardPage";
+import CompetePage from "./pages/CompetePage";
+import UserPage from "./pages/UserPage";
+import TeamPage from "./pages/TeamPage";
+import NotificationsPage from "./pages/NotificationsPage";
+import MorePage from "./pages/MorePage";
 import "./index.css";
 
 export default function App() {
@@ -80,11 +86,38 @@ export default function App() {
   return (
     <Router>
       <div className="min-h-screen bg-black text-green-500 font-mono p-4">
+        <div className="text-center mb-4">
+        <h1 className="text-4xl font-bold tracking-wider">CTFverse</h1>
+      </div>
         <Navbar isAdmin={isAdmin} />
         <Routes>
           <Route 
             path="/" 
             element={<HomePage currentUser={currentUser} />} 
+          />
+          <Route 
+            path="/scoreboard" 
+            element={<ScoreboardPage />} 
+          />
+          <Route 
+            path="/compete" 
+            element={<CompetePage />} 
+          />
+          <Route 
+            path="/user" 
+            element={<UserPage />} 
+          />
+          <Route 
+            path="/team" 
+            element={<TeamPage />} 
+          />
+          <Route 
+            path="/notifications" 
+            element={<NotificationsPage />} 
+          />
+          <Route 
+            path="/more" 
+            element={<MorePage />} 
           />
           <Route 
             path="/admin" 

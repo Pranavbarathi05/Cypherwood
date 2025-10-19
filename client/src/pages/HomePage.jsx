@@ -74,10 +74,6 @@ export default function HomePage({ currentUser }) {
 
   return (
     <div>
-      <div className="text-center mb-4">
-        <h1 className="text-4xl font-bold tracking-wider">CTFverse</h1>
-      </div>
-
       <div className="flex">
         <ChallengeList
           challenges={challenges}
