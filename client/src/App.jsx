@@ -1,70 +1,44 @@
 // src/App.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
-import ChallengeList from "./components/ChallengeList";
-import ChallengePopup from "./components/ChallengePopup";
-import AdminPanel from "./components/AdminPanel";
-import { verifyFlagHash } from "./utils/hashUtils";
+import HomePage from "./pages/HomePage";
+import AdminPage from "./pages/AdminPage";
 import "./index.css";
 
 export default function App() {
   // Hardcoded user for now
   const [currentUser] = useState("admin"); // change to "participant1" etc.
-  const [isAdmin, setIsAdmin] = useState(currentUser === "admin");
+  const [isAdmin] = useState(currentUser === "admin");
 
-  const [challenges, setChallenges] = useState([]);
-  const [selectedChallenge, setSelectedChallenge] = useState(null);
-  const [showPopup, setShowPopup] = useState(false);
-
-  // Simulated backend fetch
-  useEffect(() => {
-    fetchChallenges();
-  }, []);
-
-  const fetchChallenges = async () => {
-    // Replace with API call later
-    const mockData = [
-      {
-        id: 1,
-        name: "Admin Panel",
-        domain: "Web",
-        description: "Find the hidden admin login panel.",
-        flagHash: "9a03e9cfb7e44f73cb9231b3f3a586a91f45fdb99d3cc4e3eeff77bfa9b0d3d2",
-        points: 200,
-        difficulty: "Medium",
-        paused: false,
-        hints: [{ text: "Try /admin path", cost: 20 }],
-        solution: { text: "SQLi payload reveals admin", cost: 50 },
-        solves: [],
-      },
-      {
-        id: 2,
-        name: "Caesar Shift",
-        domain: "Crypto",
-        description: "A simple Caesar cipher encryption.",
-        flagHash: "f1b43e7e78b3f35c0c47dcb3b4b83b35a2a9641b1e1dfb7a71e5a62cfdfb6cf3",
-        points: 100,
-        difficulty: "Easy",
-        paused: false,
-        hints: [{ text: "ROT13 maybe?", cost: 10 }],
-        solution: { text: "Shift by 13 worked!", cost: 30 },
-        solves: [],
-      },
-    ];
-    setChallenges(mockData);
-  };
-
-  // For admin to create challenge
-  const createChallenge = (newChallenge) => {
-    setChallenges([...challenges, { ...newChallenge, id: Date.now(), solves: [] }]);
-  };
-
-  // Pause/Resume challenge
-  const togglePause = (id) => {
-    setChallenges((prev) =>
-      prev.map((ch) => (ch.id === id ? { ...ch, paused: !ch.paused } : ch))
-    );
-  };
+  const [challenges, setChallenges] = useState([
+    {
+      id: 1,
+      name: "Admin Panel",
+      domain: "Web",
+      description: "Find the hidden admin login panel.",
+      flagHash: "9a03e9cfb7e44f73cb9231b3f3a586a91f45fdb99d3cc4e3eeff77bfa9b0d3d2",
+      points: 200,
+      difficulty: "Medium",
+      paused: false,
+      hints: [{ text: "Try /admin path", cost: 20 }],
+      solution: { text: "SQLi payload reveals admin", cost: 50 },
+      solves: [],
+    },
+    {
+      id: 2,
+      name: "Caesar Shift",
+      domain: "Crypto",
+      description: "A simple Caesar cipher encryption.",
+      flagHash: "f1b43e7e78b3f35c0c47dcb3b4b83b35a2a9641b1e1dfb7a71e5a62cfdfb6cf3",
+      points: 100,
+      difficulty: "Easy",
+      paused: false,
+      hints: [{ text: "ROT13 maybe?", cost: 10 }],
+      solution: { text: "Shift by 13 worked!", cost: 30 },
+      solves: [],
+    },
+  ]);
 
   // Handle user submitting a flag
   const submitFlag = (id, enteredFlag) => {
@@ -91,33 +65,43 @@ export default function App() {
     setShowPopup(true);
   };
 
+  // For admin to create challenge
+  const createChallenge = (newChallenge) => {
+    setChallenges([...challenges, { ...newChallenge, id: Date.now(), solves: [] }]);
+  };
+
+  // Pause/Resume challenge
+  const togglePause = (id) => {
+    setChallenges((prev) =>
+      prev.map((ch) => (ch.id === id ? { ...ch, paused: !ch.paused } : ch))
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-black text-green-500 font-mono p-4">
-      <Navbar isAdmin={isAdmin} />
-      <div className="text-center mb-4">
-        <h1 className="text-4xl font-bold tracking-wider">CTFverse</h1>
+    <Router>
+      <div className="min-h-screen bg-black text-green-500 font-mono p-4">
+        <Navbar isAdmin={isAdmin} />
+        <Routes>
+          <Route 
+            path="/" 
+            element={<HomePage currentUser={currentUser} />} 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              isAdmin ? (
+                <AdminPage 
+                  challenges={challenges}
+                  createChallenge={createChallenge} 
+                  togglePause={togglePause}
+                />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            } 
+          />
+        </Routes>
       </div>
-
-      <div className="flex">
-        <ChallengeList
-          challenges={challenges}
-          onChallengeClick={handleChallengeClick}
-          currentUser={currentUser}
-        />
-
-        {isAdmin && (
-          <AdminPanel createChallenge={createChallenge} togglePause={togglePause} />
-        )}
-      </div>
-
-      {showPopup && selectedChallenge && (
-        <ChallengePopup
-          challenge={selectedChallenge}
-          closePopup={() => setShowPopup(false)}
-          submitFlag={submitFlag}
-          currentUser={currentUser}
-        />
-      )}
-    </div>
+    </Router>
   );
 }
