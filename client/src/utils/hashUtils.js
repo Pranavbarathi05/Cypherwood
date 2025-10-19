@@ -1,5 +1,5 @@
 // src/utils/hashUtils.js
-import SHA256 from "crypto-js/sha256";
+import { SHA256 } from "crypto-js";
 
 /**
  * Hashes the flag using SHA256.
