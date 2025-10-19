@@ -7,34 +7,33 @@ export default function Navbar({ isAdmin }) {
   const location = useLocation();
   
   return (
-    <div className="flex justify-between items-center border-b border-green-700 pb-2 mb-4">
-      <div>
-        <Link to="/" className="text-xl font-bold hover:text-green-400">
-          CTFverse
-        </Link>
-      </div>
-      <div className="flex space-x-8 text-lg">
-        <Link to="/" className={`hover:text-green-300 ${location.pathname === "/" ? "text-green-400" : ""}`}>
+    <div className="flex justify-center items-center border-b border-green-700 pb-2 mb-4">
+      <div className="flex items-center text-lg">
+        <Link to="/" className={`hover:text-green-300 px-4 ${location.pathname === "/" ? "text-green-400" : ""}`}>
           Challenges
         </Link>
-        <button className="hover:text-green-300">Scoreboard</button>
-        <button className="hover:text-green-300">Compete</button>
-        <button className="hover:text-green-300 flex items-center space-x-1">
+        <Link to="/scoreboard" className={`hover:text-green-300 px-4 ${location.pathname === "/scoreboard" ? "text-green-400" : ""}`}>
+          Scoreboard
+        </Link>
+        <Link to="/compete" className={`hover:text-green-300 px-4 ${location.pathname === "/compete" ? "text-green-400" : ""}`}>
+          Compete
+        </Link>
+        <Link to="/user" className={`hover:text-green-300 flex items-center space-x-1 px-4 ${location.pathname === "/user" ? "text-green-400" : ""}`}>
           <User className="w-4 h-4" /> <span>User</span>
-        </button>
-        <button className="hover:text-green-300 flex items-center space-x-1">
+        </Link>
+        <Link to="/team" className={`hover:text-green-300 flex items-center space-x-1 px-4 ${location.pathname === "/team" ? "text-green-400" : ""}`}>
           <Users className="w-4 h-4" /> <span>Team</span>
-        </button>
-        <button className="hover:text-green-300 flex items-center space-x-1">
+        </Link>
+        <Link to="/notifications" className={`hover:text-green-300 flex items-center space-x-1 px-4 ${location.pathname === "/notifications" ? "text-green-400" : ""}`}>
           <Bell className="w-4 h-4" /> <span>Notifications</span>
-        </button>
-        <button className="hover:text-green-300 flex items-center space-x-1">
+        </Link>
+        <Link to="/more" className={`hover:text-green-300 flex items-center space-x-1 px-4 ${location.pathname === "/more" ? "text-green-400" : ""}`}>
           <MoreHorizontal className="w-4 h-4" /> <span>More</span>
-        </button>
+        </Link>
         {isAdmin && (
           <Link 
             to="/admin" 
-            className={`text-green-400 font-bold border-l border-green-700 pl-4 hover:text-green-300 ${
+            className={`text-green-400 font-bold border-l border-green-700 pl-6 ml-2 hover:text-green-300 ${
               location.pathname === "/admin" ? "text-green-500" : ""
             }`}
           >
@@ -42,7 +41,6 @@ export default function Navbar({ isAdmin }) {
           </Link>
         )}
       </div>
-      <div></div>
     </div>
   );
 }
