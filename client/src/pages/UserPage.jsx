@@ -7,7 +7,7 @@ export default function UserPage() {
   
   const userProfile = {
     username: "admin",
-    email: "admin@ctfverse.com",
+    email: "admin@cypherwood.com",
     location: "San Francisco, CA",
     joinDate: "2024-03-15",
     bio: "Passionate about cybersecurity and ethical hacking. Love solving crypto and web exploitation challenges.",

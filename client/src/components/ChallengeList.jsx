@@ -26,21 +26,21 @@ export default function ChallengeList({ challenges, onChallengeClick, currentUse
             </div>
 
             {isActive && (
-              <div className="ml-6 mt-1 space-y-1">
+              <div className="ml-6 mt-1 space-y-2">
                 {domainChallenges.map((ch) => {
                   const solved = ch.solves.some((s) => s.user === currentUser);
                   return (
                     <div
                       key={ch.id}
-                      className={`cursor-pointer ${
-                        ch.paused
-                          ? "text-gray-600"
-                          : "hover:text-green-300"
-                      } ${solved ? "line-through text-green-700" : ""}`}
+                      className={`challenge-card matrix-text ${
+                        ch.paused ? "opacity-50" : ""
+                      } ${solved ? "border-green-700 text-green-700" : ""}`}
                       onClick={() => !ch.paused && onChallengeClick(ch)}
                     >
-                      {ch.name}{" "}
-                      {ch.paused && <span className="text-yellow-400">(Under Maintenance)</span>}
+                      <div>
+                        <span>{ch.name}</span>
+                        {ch.paused && <span className="text-yellow-400 text-sm ml-2">(Under Maintenance)</span>}
+                      </div>
                     </div>
                   );
                 })}

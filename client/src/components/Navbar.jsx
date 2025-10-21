@@ -1,9 +1,9 @@
 // src/components/Navbar.jsx
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Bell, User, Users, MoreHorizontal } from "lucide-react";
+import { Bell, User, Users, MoreHorizontal, Eye, EyeOff } from "lucide-react";
 
-export default function Navbar({ isAdmin }) {
+export default function Navbar({ isAdmin, viewingAsUser, onToggleView }) {
   const location = useLocation();
   
   return (
@@ -31,14 +31,33 @@ export default function Navbar({ isAdmin }) {
           <MoreHorizontal className="w-4 h-4" /> <span>More</span>
         </Link>
         {isAdmin && (
-          <Link 
-            to="/admin" 
-            className={`text-green-400 font-bold border-l border-green-700 pl-6 ml-2 hover:text-green-300 ${
-              location.pathname === "/admin" ? "text-green-500" : ""
-            }`}
-          >
-            Admin Panel
-          </Link>
+          <>
+            <Link 
+              to="/admin" 
+              className={`text-green-400 font-bold border-l border-green-700 pl-6 ml-2 hover:text-green-300 ${
+                location.pathname === "/admin" ? "text-green-500" : ""
+              }`}
+            >
+              Admin Panel
+            </Link>
+            <button
+              onClick={onToggleView}
+              className="flex items-center space-x-1 px-4 ml-2 hover:text-green-300"
+              title={viewingAsUser ? "Switch to admin view" : "Switch to user view"}
+            >
+              {viewingAsUser ? (
+                <>
+                  <EyeOff className="w-4 h-4" />
+                  <span>Admin View</span>
+                </>
+              ) : (
+                <>
+                  <Eye className="w-4 h-4" />
+                  <span>User View</span>
+                </>
+              )}
+            </button>
+          </>
         )}
       </div>
     </div>

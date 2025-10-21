@@ -1,7 +1,45 @@
 // src/components/ChallengePopup.jsx
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 
 export default function ChallengePopup({ challenge, closePopup, submitFlag, currentUser }) {
+  const [position, setPosition] = useState({ x: window.innerWidth - 440, y: 100 });
+  const popupRef = useRef(null);
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      if (!isDraggingRef.current) return;
+
+      const dx = e.clientX - dragStartRef.current.x;
+      const dy = e.clientY - dragStartRef.current.y;
+
+      setPosition(prev => ({
+        x: Math.min(Math.max(prev.x + dx, 0), window.innerWidth - popupRef.current.offsetWidth),
+        y: Math.max(prev.y + dy, 0)
+      }));
+
+      dragStartRef.current = { x: e.clientX, y: e.clientY };
+    };
+
+    const handleMouseUp = () => {
+      isDraggingRef.current = false;
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
+  const handleMouseDown = (e) => {
+    if (e.target.closest('.popup-content')) return;
+    isDraggingRef.current = true;
+    dragStartRef.current = { x: e.clientX, y: e.clientY };
+  };
   const [activeTab, setActiveTab] = useState("description");
   const [flagInput, setFlagInput] = useState("");
 
@@ -15,16 +53,33 @@ export default function ChallengePopup({ challenge, closePopup, submitFlag, curr
   };
 
   return (
-    <div className="w-2/3 ml-6 border border-green-700 p-4 rounded-lg bg-black/90 shadow-lg">
-      <div className="flex justify-between items-center mb-2">
+    <div
+    ref={popupRef}
+    className="challenge-popup matrix-text fixed top-0 left-0 z-50 select-none"
+    style={{
+      transform: `translate(${position.x}px, ${position.y}px)`,
+      width: "400px",          // static width box
+      maxHeight: "600px",      // fixed height limit
+      overflowY: "auto",       // scrolls if content exceeds box
+      wordWrap: "break-word",  // ensures long text wraps
+      whiteSpace: "normal",    // prevents single-line overflow
+      cursor: "move"           // shows drag cursor
+    }}
+      
+    >
+      <div className="challenge-popup-header" onMouseDown={handleMouseDown}>
         <h2 className="text-2xl font-bold tracking-widest text-green-400">
           {challenge.name}
         </h2>
         <button
-          className="text-red-500 hover:text-red-300 text-xl font-bold"
+          className="close-button hover:bg-red-900/20"
           onClick={closePopup}
+          title="Close"
         >
-          ✕
+          <svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" strokeWidth="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
         </button>
       </div>
 
@@ -86,7 +141,7 @@ export default function ChallengePopup({ challenge, closePopup, submitFlag, curr
           <input
             type="text"
             placeholder="Enter flag"
-            className="bg-black border border-green-700 p-2 w-full mb-2 text-green-400 placeholder-green-600"
+            className="matrix-input"
             value={flagInput}
             onChange={(e) => setFlagInput(e.target.value)}
             disabled={solved}
@@ -94,11 +149,9 @@ export default function ChallengePopup({ challenge, closePopup, submitFlag, curr
           <button
             onClick={handleSubmit}
             disabled={solved}
-            className={`${
-              solved
-                ? "bg-gray-600 cursor-not-allowed"
-                : "bg-green-700 hover:bg-green-600"
-            } text-black font-bold px-4 py-2 rounded`}
+            className={`matrix-button w-full ${
+              solved ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           >
             {solved ? "Already Solved" : "Submit"}
           </button>

@@ -13,9 +13,18 @@ import MorePage from "./pages/MorePage";
 import "./index.css";
 
 export default function App() {
-  // Hardcoded user for now
-  const [currentUser] = useState("admin"); // change to "participant1" etc.
-  const [isAdmin] = useState(currentUser === "admin");
+  // User state management
+  const [currentUser, setCurrentUser] = useState("admin");
+  const [isAdmin] = useState(true); // This user has admin privileges
+  const [viewingAsUser, setViewingAsUser] = useState(false);
+
+  // Function to toggle between admin and user view
+  const toggleUserView = () => {
+    if (isAdmin) {
+      setViewingAsUser(!viewingAsUser);
+      setCurrentUser(viewingAsUser ? "admin" : "participant1");
+    }
+  };
 
   const [challenges, setChallenges] = useState([
     {
@@ -87,9 +96,13 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-black text-green-500 font-mono p-4">
         <div className="text-center mb-4">
-        <h1 className="text-4xl font-bold tracking-wider">CTFverse</h1>
+        <h1 className="text-4xl font-bold tracking-wider">Cypherwood</h1>
       </div>
-        <Navbar isAdmin={isAdmin} />
+        <Navbar 
+          isAdmin={isAdmin} 
+          viewingAsUser={viewingAsUser} 
+          onToggleView={toggleUserView} 
+        />
         <Routes>
           <Route 
             path="/" 
@@ -122,7 +135,7 @@ export default function App() {
           <Route 
             path="/admin" 
             element={
-              isAdmin ? (
+              isAdmin && !viewingAsUser ? (
                 <AdminPage 
                   challenges={challenges}
                   createChallenge={createChallenge} 

@@ -102,22 +102,22 @@ export default function MorePage() {
         <div className="grid grid-cols-3 gap-4">
           <div className="flex items-center space-x-3 text-green-500">
             <Mail className="w-5 h-5 text-green-400" />
-            <span>support@ctfverse.com</span>
+            <span>support@cypherwood.com</span>
           </div>
           <div className="flex items-center space-x-3 text-green-500">
             <Github className="w-5 h-5 text-green-400" />
-            <span>github.com/ctfverse</span>
+            <span>github.com/cypherwood</span>
           </div>
           <div className="flex items-center space-x-3 text-green-500">
             <Twitter className="w-5 h-5 text-green-400" />
-            <span>@ctfverse</span>
+            <span>@cypherwood</span>
           </div>
         </div>
       </div>
 
       {/* Footer Info */}
       <div className="border border-green-700 bg-black p-4 text-center text-green-600 text-sm">
-        <p>CTFverse v1.0.0 • © 2025 • Made with 💚 by the cybersecurity community</p>
+        <p>Cypherwood v1.0.0 • © 2025 • Made with 💚 by the cybersecurity community</p>
       </div>
     </div>
   );
