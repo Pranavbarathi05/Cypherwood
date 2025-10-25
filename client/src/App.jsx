@@ -1,6 +1,12 @@
 // src/App.jsx
 import React, { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
 import Navbar from "./components/Navbar";
 import HomePage from "./pages/HomePage";
 import AdminPage from "./pages/AdminPage";
@@ -11,6 +17,7 @@ import TeamPage from "./pages/TeamPage";
 import NotificationsPage from "./pages/NotificationsPage";
 import MorePage from "./pages/MorePage";
 import "./index.css";
+import RegisterPage from "./pages/auth/RegisterPage";
 
 export default function App() {
   // User state management
@@ -32,7 +39,8 @@ export default function App() {
       name: "Admin Panel",
       domain: "Web",
       description: "Find the hidden admin login panel.",
-      flagHash: "9a03e9cfb7e44f73cb9231b3f3a586a91f45fdb99d3cc4e3eeff77bfa9b0d3d2",
+      flagHash:
+        "9a03e9cfb7e44f73cb9231b3f3a586a91f45fdb99d3cc4e3eeff77bfa9b0d3d2",
       points: 200,
       difficulty: "Medium",
       paused: false,
@@ -45,7 +53,8 @@ export default function App() {
       name: "Caesar Shift",
       domain: "Crypto",
       description: "A simple Caesar cipher encryption.",
-      flagHash: "f1b43e7e78b3f35c0c47dcb3b4b83b35a2a9641b1e1dfb7a71e5a62cfdfb6cf3",
+      flagHash:
+        "f1b43e7e78b3f35c0c47dcb3b4b83b35a2a9641b1e1dfb7a71e5a62cfdfb6cf3",
       points: 100,
       difficulty: "Easy",
       paused: false,
@@ -82,7 +91,10 @@ export default function App() {
 
   // For admin to create challenge
   const createChallenge = (newChallenge) => {
-    setChallenges([...challenges, { ...newChallenge, id: Date.now(), solves: [] }]);
+    setChallenges([
+      ...challenges,
+      { ...newChallenge, id: Date.now(), solves: [] },
+    ]);
   };
 
   // Pause/Resume challenge
@@ -96,55 +108,38 @@ export default function App() {
     <Router>
       <div className="min-h-screen bg-black text-green-500 font-mono p-4">
         <div className="text-center mb-4">
-        <h1 className="text-4xl font-bold tracking-wider">Cypherwood</h1>
-      </div>
-        <Navbar 
-          isAdmin={isAdmin} 
-          viewingAsUser={viewingAsUser} 
-          onToggleView={toggleUserView} 
+          <h1 className="text-4xl font-bold tracking-wider">Cypherwood</h1>
+        </div>
+        <Navbar
+          isAdmin={isAdmin}
+          viewingAsUser={viewingAsUser}
+          onToggleView={toggleUserView}
         />
         <Routes>
-          <Route 
-            path="/" 
-            element={<HomePage currentUser={currentUser} />} 
-          />
-          <Route 
-            path="/scoreboard" 
-            element={<ScoreboardPage />} 
-          />
-          <Route 
-            path="/compete" 
-            element={<CompetePage />} 
-          />
-          <Route 
-            path="/user" 
-            element={<UserPage />} 
-          />
-          <Route 
-            path="/team" 
-            element={<TeamPage />} 
-          />
-          <Route 
-            path="/notifications" 
-            element={<NotificationsPage />} 
-          />
-          <Route 
-            path="/more" 
-            element={<MorePage />} 
-          />
-          <Route 
-            path="/admin" 
+          <Route path="/auth" element={<Outlet />}>
+            {/* <Route path="login" element={<LoginPage />}></Route> */}
+            <Route path="register" element={<RegisterPage />}></Route>
+          </Route>
+          <Route path="/" element={<HomePage currentUser={currentUser} />} />
+          <Route path="/scoreboard" element={<ScoreboardPage />} />
+          <Route path="/compete" element={<CompetePage />} />
+          <Route path="/user" element={<UserPage />} />
+          <Route path="/team" element={<TeamPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
+          <Route path="/more" element={<MorePage />} />
+          <Route
+            path="/admin"
             element={
               isAdmin && !viewingAsUser ? (
-                <AdminPage 
+                <AdminPage
                   challenges={challenges}
-                  createChallenge={createChallenge} 
+                  createChallenge={createChallenge}
                   togglePause={togglePause}
                 />
               ) : (
                 <Navigate to="/" replace />
               )
-            } 
+            }
           />
         </Routes>
       </div>
