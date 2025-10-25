@@ -18,6 +18,7 @@ import NotificationsPage from "./pages/NotificationsPage";
 import MorePage from "./pages/MorePage";
 import "./index.css";
 import RegisterPage from "./pages/auth/RegisterPage";
+import LoginPage from "./pages/auth/LoginPage";
 
 export default function App() {
   // User state management
@@ -117,7 +118,7 @@ export default function App() {
         />
         <Routes>
           <Route path="/auth" element={<Outlet />}>
-            {/* <Route path="login" element={<LoginPage />}></Route> */}
+            <Route path="login" element={<LoginPage />}></Route> 
             <Route path="register" element={<RegisterPage />}></Route>
           </Route>
           <Route path="/" element={<HomePage currentUser={currentUser} />} />
