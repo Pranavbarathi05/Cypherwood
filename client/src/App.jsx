@@ -22,8 +22,8 @@ import LoginPage from "./pages/auth/LoginPage";
 
 export default function App() {
   // User state management
-  const [currentUser, setCurrentUser] = useState("admin");
-  const [isAdmin] = useState(true); // This user has admin privileges
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [viewingAsUser, setViewingAsUser] = useState(false);
 
   // Function to toggle between admin and user view
@@ -115,19 +115,83 @@ export default function App() {
           isAdmin={isAdmin}
           viewingAsUser={viewingAsUser}
           onToggleView={toggleUserView}
+          currentUser={currentUser}
         />
         <Routes>
           <Route path="/auth" element={<Outlet />}>
-            <Route path="login" element={<LoginPage />}></Route> 
-            <Route path="register" element={<RegisterPage />}></Route>
+            <Route path="login" element={<LoginPage setCurrentUser={setCurrentUser} setIsAdmin={setIsAdmin} />} />
+            <Route path="register" element={<RegisterPage />} />
           </Route>
-          <Route path="/" element={<HomePage currentUser={currentUser} />} />
-          <Route path="/scoreboard" element={<ScoreboardPage />} />
-          <Route path="/compete" element={<CompetePage />} />
-          <Route path="/user" element={<UserPage />} />
-          <Route path="/team" element={<TeamPage />} />
-          <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/more" element={<MorePage />} />
+          <Route 
+            path="/" 
+            element={
+              currentUser ? (
+                <HomePage currentUser={currentUser} />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/scoreboard" 
+            element={
+              currentUser ? (
+                <ScoreboardPage currentUser={currentUser} />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/compete" 
+            element={
+              currentUser ? (
+                <CompetePage />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/user/:username" 
+            element={
+              currentUser ? (
+                <UserPage currentUser={currentUser} />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/team" 
+            element={
+              currentUser ? (
+                <TeamPage />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/notifications" 
+            element={
+              currentUser ? (
+                <NotificationsPage />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/more" 
+            element={
+              currentUser ? (
+                <MorePage />
+              ) : (
+                <Navigate to="/auth/login" replace />
+              )
+            } 
+          />
           <Route
             path="/admin"
             element={
