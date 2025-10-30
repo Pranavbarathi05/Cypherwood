@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+// Mock users - In a real app, this would be in your backend
+const MOCK_USERS = {
+  "admin": { password: "admin123", isAdmin: true },
+  "user1": { password: "user123", isAdmin: false },
+  "user2": { password: "user123", isAdmin: false }
+};
+
+export default function Login({ setCurrentUser, setIsAdmin }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     username: '',
@@ -9,6 +16,7 @@ export default function Login() {
   });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loginError, setLoginError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,14 +55,22 @@ export default function Login() {
     }
 
     setIsSubmitting(true);
+    setLoginError('');
 
+    // Simulate API call with mock data
     setTimeout(() => {
-      console.log('Login data:', {
-        username: formData.username,
-        password: formData.password
-      });
-
-      navigate('/');
+      const user = MOCK_USERS[formData.username];
+      
+      if (user && user.password === formData.password) {
+        // Successful login
+        setCurrentUser(formData.username);
+        setIsAdmin(user.isAdmin);
+        navigate('/');
+      } else {
+        // Failed login
+        setLoginError('Invalid username or password');
+        setIsSubmitting(false);
+      }
     }, 1000);
   };
 
@@ -113,6 +129,13 @@ export default function Login() {
                 <p className="text-red-800 text-xs mt-1 font-mono">&gt; ERROR: {errors.password}</p>
               )}
             </div>
+
+            {/* Login Error Message */}
+            {loginError && (
+              <div className="text-red-800 text-sm mb-4 font-mono border-2 border-red-800 p-3 rounded">
+                &gt; ERROR: {loginError}
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

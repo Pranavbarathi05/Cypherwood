@@ -1,11 +1,138 @@
 // src/pages/UserPage.jsx
 import React, { useState } from "react";
 import { User, Mail, MapPin, Calendar, Trophy, Target, Award, Edit2 } from "lucide-react";
+import { useParams, useNavigate } from "react-router-dom";
 
-export default function UserPage() {
+export default function UserPage({ currentUser }) {
+  const { username } = useParams();
+  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   
-  const userProfile = {
+  // Mock profiles data - in a real app, you would fetch this from an API
+  const mockProfiles = {
+    CyberNinja: {
+      username: "CyberNinja",
+      email: "ninja@cypherwood.com",
+      location: "Tokyo, Japan",
+      joinDate: "2024-02-01",
+      bio: "Professional CTF player and security researcher. Specializing in binary exploitation and reverse engineering. Currently ranked #1 globally.",
+      rank: 1,
+      totalPoints: 1250,
+      totalSolves: 15,
+      teamName: "HackTheBox",
+      avatarColor: "bg-blue-700"
+    },
+    CodeBreaker: {
+      username: "CodeBreaker",
+      email: "codebreaker@cypherwood.com",
+      location: "London, UK",
+      joinDate: "2024-02-15",
+      bio: "Security enthusiast with a focus on cryptography and web security. Love breaking complex encryption challenges.",
+      rank: 2,
+      totalPoints: 1100,
+      totalSolves: 13,
+      teamName: "CyberSquad",
+      avatarColor: "bg-purple-700"
+    },
+    admin: {
+      username: "admin",
+      email: "admin@cypherwood.com",
+      location: "San Francisco, CA",
+      joinDate: "2024-03-15",
+      bio: "Platform administrator and challenge creator. Passionate about cybersecurity education.",
+      rank: 3,
+      totalPoints: 950,
+      totalSolves: 11,
+      teamName: "RedTeam",
+      avatarColor: "bg-green-700"
+    },
+    SecurityPro: {
+      username: "SecurityPro",
+      email: "security@cypherwood.com",
+      location: "Berlin, Germany",
+      joinDate: "2024-02-20",
+      bio: "Blue team specialist focused on defensive security. Expert in incident response and threat hunting.",
+      rank: 4,
+      totalPoints: 850,
+      totalSolves: 10,
+      teamName: "BlueTeam",
+      avatarColor: "bg-cyan-700"
+    },
+    L33tHacker: {
+      username: "L33tHacker",
+      email: "leet@cypherwood.com",
+      location: "New York, USA",
+      joinDate: "2024-03-01",
+      bio: "Competitive hacker specializing in binary exploitation. Always up for a good pwn challenge.",
+      rank: 5,
+      totalPoints: 800,
+      totalSolves: 9,
+      teamName: "PwnStars",
+      avatarColor: "bg-red-700"
+    },
+    ByteMaster: {
+      username: "ByteMaster",
+      email: "byte@cypherwood.com",
+      location: "Seoul, South Korea",
+      joinDate: "2024-02-28",
+      bio: "Assembly wizard and low-level programming expert. Love diving deep into binary challenges.",
+      rank: 6,
+      totalPoints: 750,
+      totalSolves: 8,
+      teamName: "HackTheBox",
+      avatarColor: "bg-yellow-700"
+    },
+    CryptoKing: {
+      username: "CryptoKing",
+      email: "crypto@cypherwood.com",
+      location: "Paris, France",
+      joinDate: "2024-03-05",
+      bio: "Cryptography enthusiast with a PhD in Mathematics. Specialized in breaking classical and modern ciphers.",
+      rank: 7,
+      totalPoints: 700,
+      totalSolves: 8,
+      teamName: "CyberSquad",
+      avatarColor: "bg-emerald-700"
+    },
+    WebExploit: {
+      username: "WebExploit",
+      email: "web@cypherwood.com",
+      location: "Amsterdam, Netherlands",
+      joinDate: "2024-03-10",
+      bio: "Web security researcher and bug bounty hunter. OWASP contributor and XSS specialist.",
+      rank: 8,
+      totalPoints: 650,
+      totalSolves: 7,
+      teamName: "RedTeam",
+      avatarColor: "bg-orange-700"
+    },
+    ReverseEng: {
+      username: "ReverseEng",
+      email: "reverse@cypherwood.com",
+      location: "Moscow, Russia",
+      joinDate: "2024-03-12",
+      bio: "Reverse engineering expert focusing on malware analysis and anti-debugging techniques.",
+      rank: 9,
+      totalPoints: 600,
+      totalSolves: 7,
+      teamName: "BlueTeam",
+      avatarColor: "bg-indigo-700"
+    },
+    ForensicAce: {
+      username: "ForensicAce",
+      email: "forensics@cypherwood.com",
+      location: "Sydney, Australia",
+      joinDate: "2024-03-20",
+      bio: "Digital forensics investigator specialized in memory analysis and disk forensics.",
+      rank: 10,
+      totalPoints: 550,
+      totalSolves: 6,
+      teamName: "PwnStars",
+      avatarColor: "bg-violet-700"
+    }
+  };
+
+  const userProfile = mockProfiles[username] || {
     username: "admin",
     email: "admin@cypherwood.com",
     location: "San Francisco, CA",
@@ -47,6 +174,14 @@ export default function UserPage() {
 
   return (
     <div className="max-w-6xl mx-auto space-y-6">
+      {/* Back Button */}
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-4 text-green-400 hover:text-green-300 flex items-center"
+      >
+        ← Back
+      </button>
+
       {/* Profile Header */}
       <div className="border border-green-700 bg-black p-6">
         <div className="flex justify-between items-start mb-6">
@@ -72,13 +207,15 @@ export default function UserPage() {
               </div>
             </div>
           </div>
-          <button 
-            onClick={() => setIsEditing(!isEditing)}
-            className="bg-green-700 hover:bg-green-600 text-black font-bold py-2 px-4 flex items-center"
-          >
-            <Edit2 className="w-4 h-4 mr-2" />
-            Edit Profile
-          </button>
+          {username === currentUser && ( // Only show edit button for your own profile
+            <button 
+              onClick={() => setIsEditing(!isEditing)}
+              className="bg-green-700 hover:bg-green-600 text-black font-bold py-2 px-4 flex items-center"
+            >
+              <Edit2 className="w-4 h-4 mr-2" />
+              Edit Profile
+            </button>
+          )}
         </div>
         
         <p className="text-green-300 mb-4 border-t border-green-900 pt-4">

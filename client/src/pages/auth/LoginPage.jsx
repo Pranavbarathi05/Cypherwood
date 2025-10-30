@@ -1,8 +1,8 @@
 import React from 'react'
 import Login from '../../components/Login.jsx'
 
-export default function LoginPage() {
+export default function LoginPage({ setCurrentUser, setIsAdmin }) {
   return (
-    <Login />
+    <Login setCurrentUser={setCurrentUser} setIsAdmin={setIsAdmin} />
   )
 }
